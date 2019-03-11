@@ -14,7 +14,6 @@ router.post("/search", function(req, res, next) {
   const city = req.body.city.toLowerCase().replace(/ /g, "_");
   const state = req.body.state.toLowerCase();
   const url = `https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:${state},ocd-division/country:us/state:${state}/place:${city}}`;
-  console.log(url);
   //typing up the url will provide an edn file but my code doesnt seem to obtain that nor the json version of it, tried many different ways
   //the json i should have received should have looked like this https://repl.it/repls/PaleCyberSystemsoftware
 
@@ -27,8 +26,6 @@ router.post("/search", function(req, res, next) {
       method: "GET"
     },
     function(err, response, body) {
-      console.log(response);
-      console.log(body);
       if (err) {
         console.log(err);
         res.redirect("/");
