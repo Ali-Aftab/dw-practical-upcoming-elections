@@ -10,13 +10,9 @@ router.get("/", function(req, res, next) {
 
 /* POST search */
 router.post("/search", function(req, res, next) {
-  // res.send("<h1>Test</h1>");
   const city = req.body.city.toLowerCase().replace(/ /g, "_");
   const state = req.body.state.toLowerCase();
-  const url = `https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:${state},ocd-division/country:us/state:${state}/place:${city}}`;
-  //typing up the url will provide an edn file but my code doesnt seem to obtain that nor the json version of it, tried many different ways
-  //the json i should have received should have looked like this https://repl.it/repls/PaleCyberSystemsoftware
-
+  const url = `https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:${state},ocd-division/country:us/state:${state}/place:${city}`;
   request(
     {
       url,
@@ -30,7 +26,7 @@ router.post("/search", function(req, res, next) {
         console.log(err);
         res.redirect("/");
       } else {
-        const result = body;
+        const result = JSON.parse(body);
         const htmlFormat = jsonToHtml(result);
         res.send(htmlFormat);
       }
@@ -45,7 +41,9 @@ function jsonToHtml(result) {
     let districtObj = result[i];
     for (let key in districtObj) {
       if (typeof districtObj[key] === "object") {
-        isObject(districtObj[key], election);
+        const formated = isObject(districtObj[key], election);
+        console.log(formated);
+        election = election + formated;
       } else {
         election =
           election +
@@ -58,11 +56,12 @@ function jsonToHtml(result) {
       }
     }
   }
+  return election;
 }
 function isObject(info, str) {
   for (let key in info) {
-    if (typeof info[key] === "object") {
-      isObject(info[key], str);
+    if (typeof info[key] == "object") {
+      str = str + isObject(info[key], str);
     } else {
       str =
         str +
@@ -74,6 +73,6 @@ function isObject(info, str) {
       `;
     }
   }
+  return str;
 }
-
 module.exports = router;
