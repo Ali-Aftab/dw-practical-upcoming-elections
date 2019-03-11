@@ -15,6 +15,8 @@ router.post("/search", function(req, res, next) {
   const state = req.body.state.toLowerCase();
   const url = `https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:${state},ocd-division/country:us/state:${state}/place:${city}}`;
   console.log(url);
+  //typing up the url will provide an edn file but my code doesnt seem to obtain that nor the json version of it, tried many different ways
+  //the json i should have received should have looked like this https://repl.it/repls/PaleCyberSystemsoftware
 
   request.get(
     {
@@ -24,13 +26,12 @@ router.post("/search", function(req, res, next) {
       }
     },
     function(err, response, body) {
-      console.log(response);
-      console.log(body);
       if (err) {
         console.log(err);
         res.redirect("/");
       } else {
-        console.log("hi");
+        const result = body;
+        //if I had more time I would have done a for loop and place the text in its proper <tag>
         res.send("<h1>Test</h1>");
       }
     }
